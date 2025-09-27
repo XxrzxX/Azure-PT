@@ -9,7 +9,7 @@
 ---
 
 ### 📖 
-- **[Azure Study Notes](Azure_Study_Notes.md)** 
+- **[Azure Study Notes](Notes/Azure_Study_Notes.md)** 
 - **[Lab Scenarios](Azure_Lab_Scenarios.md)** - 10 hands-on practical exercises (in progress)
 - **[Lab Cheat Sheet](Azure_Lab_Cheatsheet.md)** - Quick reference commands and techniques (in progress)
 
