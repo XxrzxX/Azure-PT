@@ -16,10 +16,6 @@
 ---
 
 
-**⭐ Star this repository if you find it helpful!**
-
-**🔄 Keep checking for updates as Azure security evolves rapidly**
 
 ---
 
-*Happy learning and stay ethical! 🛡️*
