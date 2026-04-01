@@ -301,10 +301,10 @@ az vm list
 az vm list-ip-addresses --name <VMName> --resource-group <RG>
 
 # Get managed identity token (from compromised VM) - Updated API version
-curl -H "Metadata:true" "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2021-02-01&resource=https://management.azure.com/"
+curl -H "Metadata:true" "http://[IP_ADDRESS]/metadata/identity/oauth2/token?api-version=2021-02-01&resource=https://management.azure.com/"
 
 # Alternative: Get token for Microsoft Graph
-curl -H "Metadata:true" "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2021-02-01&resource=https://graph.microsoft.com/"
+curl -H "Metadata:true" "http://[IP_ADDRESS]/metadata/identity/oauth2/token?api-version=2021-02-01&resource=https://graph.microsoft.com/"
 
 # Use token in PowerShell
 $token = "<AccessToken>"
@@ -404,7 +404,7 @@ $app.RequiredResourceAccess
 6. **CRITICAL:** Azure AD → Microsoft Entra ID (Oct 2023 rebrand)
 7. **Office 365** → Microsoft 365 (includes security features)
 8. Use `-All` parameter in PowerShell commands to get complete results
-9. **IMDS endpoint** `169.254.169.254` only works from within Azure VMs/containers
+9. **IMDS endpoint** `[IP_ADDRESS]` only works from within Azure VMs/containers
 10. **Service Principal secrets** can now have max 2-year expiry (security improvement)
 11. **Application permissions** are more dangerous than delegated permissions
 12. **Conditional Access** is now the primary security control method
