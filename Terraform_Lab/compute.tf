@@ -10,7 +10,7 @@ resource "azurerm_linux_virtual_machine" "vuln_vm" {
 
   admin_ssh_key {
     username   = "azureuser"
-    public_key = file("~/.ssh/id_rsa.pub") # Assumes the user has a local key
+    public_key = file("${path.module}/lab_ssh_key.pub") # Uses the locally generated key
   }
 
   os_disk {
