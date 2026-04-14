@@ -1,0 +1,81 @@
+---
+- name: Configure Vulnerable SSRF Lab (Professional Rebuild)
+  hosts: vuln_vm
+  become: yes
+  vars:
+    app_dir: "/var/www"
+    app_user: "root"
+
+  tasks:
+    - name: "PRE-STEP: Create 1GB Swap File for stability"
+      shell: |
+        if [ ! -f /swapfile ]; then
+          fallocate -l 1G /swapfile
+          chmod 600 /swapfile
+          mkswap /swapfile
+          swapon /swapfile
+          echo '/swapfile none swap sw 0 0' >> /etc/fstab
+        fi
+      args:
+        creates: /swapfile
+
+    - name: "Step 1: Update apt cache"
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: "Step 2: Install required system packages"
+      apt:
+        name:
+          - python3-flask
+          - python3-requests
+        state: present
+
+    - name: "Step 3: Ensure application directory exists"
+      file:
+        path: "{{ app_dir }}"
+        state: directory
+        owner: "{{ app_user }}"
+        group: "{{ app_user }}"
+        mode: '0755'
+
+    - name: "Step 4: Deploy Premium Web Application (app.py)"
+      copy:
+        src: ./app.py
+        dest: "{{ app_dir }}/app.py"
+        owner: "{{ app_user }}"
+        group: "{{ app_user }}"
+        mode: '0644'
+
+    - name: "Step 5: Configure vuln-api.service"
+      copy:
+        dest: /etc/systemd/system/vuln-api.service
+        content: |
+          [Unit]
+          Description=Vulnerable SSRF API (Ansible Provisioned)
+          After=network.target
+
+          [Service]
+          User={{ app_user }}
+          WorkingDirectory={{ app_dir }}
+          ExecStart=/usr/bin/python3 {{ app_dir }}/app.py
+          Restart=always
+
+          [Install]
+          WantedBy=multi-user.target
+      notify: Reload Systemd
+
+    - name: "Step 6: Ensure vuln-api.service is started and enabled"
+      systemd:
+        name: vuln-api.service
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: Reload Systemd
+      systemd:
+        daemon_reload: yes
+    - name: Restart Web App
+      systemd:
+        name: vuln-api.service
+        state: restarted
